@@ -8,7 +8,7 @@ The algorithms come from my Machine Learning coursework at ICAI. They are reorga
 
 | Module | Contents |
 |---|---|
-| `linear_model` | `LinearRegression` (normal equation with pseudo-inverse, or batch gradient descent), `simple_linear_regression` (closed form), `LogisticRegression` (gradient descent on the negative log-likelihood with L1, L2 or elastic-net penalties) |
+| `linear_model` | `LinearRegression` (normal equation with pseudo-inverse, or batch gradient descent), `simple_linear_regression` (closed form), `LogisticRegression` (gradient descent on the negative log-likelihood with lasso (L1), ridge (L2) or elastic-net penalties) |
 | `neighbors` | `KNNClassifier` with any Minkowski distance, majority vote and class probabilities |
 | `discriminant` | `LDA`: within/between-class scatter matrices, eigenvectors of S_W⁻¹S_B, projection and nearest-class-mean classification |
 | `model_selection` | `k_fold_cross_validation` (k-fold and leave-one-out) |
@@ -20,7 +20,7 @@ All models follow the familiar `fit` / `predict` / `score` interface.
 ```python
 from mlscratch import LogisticRegression
 
-model = LogisticRegression(penalty="l2", alpha=1.0, learning_rate=0.1, n_iterations=2000)
+model = LogisticRegression(penalty="ridge", alpha=1.0, learning_rate=0.1, n_iterations=2000)
 model.fit(X_train, y_train)
 model.predict_proba(X_test)
 ```
@@ -29,7 +29,7 @@ model.predict_proba(X_test)
 
 - **Least squares:** θ = (XᵀX)⁺ Xᵀy. The pseudo-inverse keeps the solution defined when columns are collinear.
 - **Gradient descent on the MSE:** ∂/∂w = (2/m) Xᵀ(Xw + b − y).
-- **Logistic regression:** p = σ(Xw + b). The gradient of the mean negative log-likelihood is (1/m) Xᵀ(p − y). The penalties add (α/m)·sign(w) (L1), (α/m)·w (L2), or a convex combination of both (elastic net). The intercept is not penalised.
+- **Logistic regression:** p = σ(Xw + b). The gradient of the mean negative log-likelihood is (1/m) Xᵀ(p − y). The penalties add (α/m)·sign(w) (lasso), (α/m)·w (ridge), or a convex combination of both (elastic net). The intercept is not penalised.
 - **LDA:** S_W = Σ_c Σ_{x∈c} (x − μ_c)(x − μ_c)ᵀ and S_B = Σ_c n_c (μ_c − μ)(μ_c − μ)ᵀ. The projection uses the leading eigenvectors of S_W⁻¹S_B.
 
 ## Validation against scikit-learn

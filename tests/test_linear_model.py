@@ -65,7 +65,7 @@ def test_logistic_loss_decreases():
     assert np.all(np.diff(model.loss_history_) <= 1e-12)
 
 
-@pytest.mark.parametrize("penalty", ["l1", "l2", "elasticnet"])
+@pytest.mark.parametrize("penalty", ["lasso", "ridge", "elasticnet"])
 def test_regularisation_shrinks_weights(penalty):
     X, y = _breast_cancer()
     plain = LogisticRegression(n_iterations=2000).fit(X, y)
@@ -75,11 +75,11 @@ def test_regularisation_shrinks_weights(penalty):
 
 def test_l1_drives_weights_towards_zero():
     X, y = _breast_cancer()
-    l1 = LogisticRegression(penalty="l1", alpha=500.0, n_iterations=3000).fit(X, y)
-    l2 = LogisticRegression(penalty="l2", alpha=500.0, n_iterations=3000).fit(X, y)
+    l1 = LogisticRegression(penalty="lasso", alpha=500.0, n_iterations=3000).fit(X, y)
+    l2 = LogisticRegression(penalty="ridge", alpha=500.0, n_iterations=3000).fit(X, y)
     assert np.sum(np.abs(l1.coef_) < 1e-2) > np.sum(np.abs(l2.coef_) < 1e-2)
 
 
 def test_unknown_penalty_raises():
     with pytest.raises(ValueError):
-        LogisticRegression(penalty="l3")
+        LogisticRegression(penalty="l1_l2")

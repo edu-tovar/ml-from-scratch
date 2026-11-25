@@ -83,7 +83,7 @@ class LogisticRegression:
 
     Parameters
     ----------
-    penalty : {None, "l1", "l2", "elasticnet"}
+    penalty : {None, "lasso", "ridge", "elasticnet"}
     alpha : float
         Regularisation strength (larger means stronger). Note that this is the
         inverse of scikit-learn's ``C``.
@@ -92,7 +92,7 @@ class LogisticRegression:
     """
 
     def __init__(self, penalty=None, alpha=1.0, l1_ratio=0.5, learning_rate=0.1, n_iterations=1000):
-        if penalty not in (None, "l1", "l2", "elasticnet"):
+        if penalty not in (None, "lasso", "ridge", "elasticnet"):
             raise ValueError(f"unknown penalty {penalty!r}")
         self.penalty = penalty
         self.alpha = alpha
@@ -117,9 +117,9 @@ class LogisticRegression:
         w = self.coef_
         l1 = (self.alpha / m) * np.sign(w)
         l2 = (self.alpha / m) * w
-        if self.penalty == "l1":
+        if self.penalty == "lasso":
             return l1
-        if self.penalty == "l2":
+        if self.penalty == "ridge":
             return l2
         if self.penalty == "elasticnet":
             return self.l1_ratio * l1 + (1 - self.l1_ratio) * l2

@@ -74,7 +74,7 @@ def test_leave_one_out_runs():
 
 def test_one_hot_matches_sklearn():
     X = np.array([[1.0, "red", 3.0], [2.0, "blue", 1.0], [3.0, "red", 2.0]], dtype=object)
-    ours = one_hot_encode(X, [1])
+    ours = one_hot_encode(X, [1]).astype(float)
     ref = OneHotEncoder(sparse_output=False).fit_transform(X[:, [1]])
     np.testing.assert_allclose(ours[:, 1:3], ref)
     np.testing.assert_allclose(ours[:, [0, 3]], X[:, [0, 2]].astype(float))

@@ -30,11 +30,11 @@ class LDA:
             diff = (mean_c - overall_mean).reshape(-1, 1)
             S_B += X_c.shape[0] * diff @ diff.T
 
-        # S_W^-1 S_B is not symmetric, so eig can return tiny imaginary parts.
-        eigvals, eigvecs = np.linalg.eig(np.linalg.solve(S_W, S_B))
-        order = np.argsort(eigvals.real)[::-1]
-        self.explained_eigenvalues_ = eigvals.real[order][: self.n_components_]
-        self.weights_ = eigvecs.real[:, order[: self.n_components_]].T
+        eigen_values, eigen_vectors = np.linalg.eig(np.linalg.inv(S_W) @ S_B)
+        # S_W^-1 S_B is not symmetric, so eig can return complex numbers with
+        # zero imaginary part: keep the real part.
+        eigen_pairs = sorted(zip(eigen_values.real, eigen_vectors.real.T), key=lambda pair: pair[0], reverse=True)
+        self.weights_ = np.array([vector for _, vector in eigen_pairs[: self.n_components_]])
 
         self.class_means_ = np.array([self.transform(X[y == c]).mean(axis=0) for c in self.classes_])
         self.priors_ = np.array([np.mean(y == c) for c in self.classes_])

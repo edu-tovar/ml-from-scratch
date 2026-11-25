@@ -29,7 +29,7 @@ class KNNClassifier:
         return np.sum(np.abs(self.X_train_ - point) ** self.p, axis=1) ** (1 / self.p)
 
     def _neighbour_labels(self, point):
-        nearest = np.argsort(self._distances(point), kind="stable")[: self.k]
+        nearest = np.argsort(self._distances(point))[: self.k]
         return self.y_train_[nearest]
 
     @staticmethod
